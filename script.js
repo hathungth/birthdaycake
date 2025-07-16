@@ -49,13 +49,12 @@ BLINK(EYES);
 
 const FROSTING_TL = () =>
 timeline().
-to(
-'#frosting',
-{
-  scaleX: 1.015,
-  duration: 0.25 },
+  to('#frosting', {
+  duration: 1,
+  scaleY: 1.2,
+  ease: "elastic.out(1, 0.3)" // thay thế hiệu ứng
+}, 0).
 
-0).
 
 to(
 '#frosting',
@@ -93,12 +92,14 @@ to(
 to('.cake__face', { duration: 1, x: -48.82 }, 0);
 
 const flickerSpeed = 0.1;
-const FLICKER_TL = timeline().
-to('.candle__flame-outer', {
+const FLICKER_TL = timeline()
+.to('.candle__flame-outer', {
   duration: flickerSpeed,
   repeat: -1,
   yoyo: true,
-  morphSVG: '#flame-outer' }).
+  scaleX: 0.95,
+  scaleY: 1.05,
+  transformOrigin: 'center' }).
 
 to(
 '.candle__flame-inner',
