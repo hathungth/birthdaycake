@@ -66,6 +66,7 @@ FLICKER_TL.to('.candle__flame-inner', {
   scaleX: 0.95,
   transformOrigin: '50% 50%'
 }, 0);
+FLICKER_TL.pause();
 
 const SHAKE_TL = () =>
   timeline({ delay: 0.5 })
@@ -144,6 +145,8 @@ const RESET = () => {
   set('.birthday-button', { scale: 0.6, x: 0, y: 0 });
   set('.birthday-button__cake', { display: 'none' });
   set('.cake__candle', { scaleY: 0, transformOrigin: '50% 100%' });
+
+  FLICKER_TL.pause(0);
 };
 RESET();
 
@@ -173,14 +176,16 @@ const MASTER_TL = timeline({
   .add(FLAME_TL(), 'FLAME_ON')
   .add(LIGHTS_OUT(), 'LIGHTS_OUT');
 
-SOUNDS.TUNE.onended = SOUNDS.MATCH.onended = () => MASTER_TL.play();
+// Không dùng onended → dùng delay chắc chắn hơn
 MASTER_TL.addPause('FLAME_ON', () => {
+  SOUNDS.MATCH.currentTime = 0;
   SOUNDS.MATCH.play();
   delayedCall(1.5, () => MASTER_TL.play());
 });
 MASTER_TL.addPause('LIGHTS_OUT', () => {
+  SOUNDS.TUNE.currentTime = 0;
   SOUNDS.TUNE.play();
-  delayedCall(5, () => MASTER_TL.play());
+  delayedCall(6, () => MASTER_TL.play());
 });
 
 BTN.addEventListener('click', () => {
@@ -188,9 +193,8 @@ BTN.addEventListener('click', () => {
   MASTER_TL.restart();
 });
 
-SOUNDS.TUNE.muted = SOUNDS.MATCH.muted = SOUNDS.HORN.muted = SOUNDS.POP.muted = SOUNDS.CHEER.muted = SOUNDS.BLOW.muted = SOUNDS.ON.muted = false;
-
-document.querySelector('#volume').addEventListener('input', () => {
-  const newMute = !SOUNDS.BLOW.muted;
-  Object.values(SOUNDS).forEach(sound => sound.muted = newMute);
+// Toggle âm thanh theo trạng thái checkbox
+document.querySelector('#volume').addEventListener('input', (e) => {
+  const muted = !e.target.checked;
+  Object.values(SOUNDS).forEach(sound => sound.muted = muted);
 });
