@@ -53,23 +53,19 @@ const SPIN_TL = () =>
     .to('.cake__face', { x: -48.82, duration: 1 }, 0);
 
 const flickerSpeed = 0.1;
-const FLICKER_TL = timeline()
-  .to('.candle__flame-outer', {
-    duration: flickerSpeed,
-    repeat: -1,
-    yoyo: true,
-    scaleY: 1.1,
-    scaleX: 0.95,
-    transformOrigin: 'center'
-  })
-  .to('.candle__flame-inner', {
-    duration: flickerSpeed,
-    repeat: -1,
-    yoyo: true,
-    scaleY: 0.9,
-    scaleX: 1.1,
-    transformOrigin: 'center'
-  }, 0);
+const FLICKER_TL = timeline({ repeat: -1, yoyo: true });
+FLICKER_TL.to('.candle__flame-outer', {
+  duration: flickerSpeed,
+  scaleY: 0.95,
+  scaleX: 1.05,
+  transformOrigin: '50% 50%'
+});
+FLICKER_TL.to('.candle__flame-inner', {
+  duration: flickerSpeed,
+  scaleY: 1.05,
+  scaleX: 0.95,
+  transformOrigin: '50% 50%'
+}, 0);
 
 const SHAKE_TL = () =>
   timeline({ delay: 0.5 })
@@ -178,8 +174,14 @@ const MASTER_TL = timeline({
   .add(LIGHTS_OUT(), 'LIGHTS_OUT');
 
 SOUNDS.TUNE.onended = SOUNDS.MATCH.onended = () => MASTER_TL.play();
-MASTER_TL.addPause('FLAME_ON', () => SOUNDS.MATCH.play());
-MASTER_TL.addPause('LIGHTS_OUT', () => SOUNDS.TUNE.play());
+MASTER_TL.addPause('FLAME_ON', () => {
+  SOUNDS.MATCH.play();
+  delayedCall(1.5, () => MASTER_TL.play());
+});
+MASTER_TL.addPause('LIGHTS_OUT', () => {
+  SOUNDS.TUNE.play();
+  delayedCall(5, () => MASTER_TL.play());
+});
 
 BTN.addEventListener('click', () => {
   BTN.setAttribute('disabled', true);
