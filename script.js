@@ -186,7 +186,7 @@ BTN.addEventListener('click', () => {
   MASTER_TL.restart();
 });
 
-SOUNDS.TUNE.muted = SOUNDS.MATCH.muted = SOUNDS.HORN.muted = SOUNDS.POP.muted = SOUNDS.CHEER.muted = SOUNDS.BLOW.muted = SOUNDS.ON.muted = true;
+SOUNDS.TUNE.muted = SOUNDS.MATCH.muted = SOUNDS.HORN.muted = SOUNDS.POP.muted = SOUNDS.CHEER.muted = SOUNDS.BLOW.muted = SOUNDS.ON.muted = false;
 
 document.querySelector('#volume').addEventListener('input', () => {
   const newMute = !SOUNDS.BLOW.muted;
